@@ -43,7 +43,7 @@ double backend::evaluate(std::string expression) {
             values.push(std::stod(val));
             i--;
         }
-        else if (isdigit(expression[i])) {
+        else if (isdigit(expression[i]) || expression[i] == '.') {
             std::string val;
             while (i < expression.length() && (isdigit(expression[i]) || expression[i] == '.')) {
                 val += expression[i++];

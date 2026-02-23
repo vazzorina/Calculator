@@ -41,7 +41,6 @@ Rectangle {
         id: tapArea
         anchors.fill: parent
         onClicked: root.clicked()
-        onPressAndHold: root.longPressed()
     }
 
     onClicked: {

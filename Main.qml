@@ -8,15 +8,79 @@ Window {
     property bool isClosedBracket: false
     property bool isBracket: false
     property bool isResult: false
+    property bool waitingForCode: false
 
     width: 360
     height: 640
-    //minimumWidth: width; maximumWidth: width
-    //minimumHeight: height; maximumHeight: height
     visible: true
     title: qsTr("Калькулятор")
     color: "#024873"
 
+    Timer {
+        id: holdTimer
+        interval: 4000
+        repeat: false
+        onTriggered: {
+            window.waitingForCode = true
+            input.text = "" // Очищаем поле для ввода кода
+            inputTimer.start() // Запускаем окно в 5 секунд
+        }
+    }
+
+    Timer {
+        id: inputTimer
+        interval: 5000
+        repeat: false
+        onTriggered: {
+            window.waitingForCode = false
+            input.text = "0"
+        }
+    }
+
+    Rectangle {
+        id: secretMenu
+        anchors.centerIn: parent
+        anchors.margins: 25
+        visible: false
+        height: 200
+        width: 300
+        z: 100
+        color: "#FFFFFF"
+        border.color: "#F25E5E"
+        border.width: 2
+        radius: 15
+        Label {
+            text: "Секретное меню"
+            color: "#F25E5E"
+            font.pixelSize: 24
+            font.family: "Open Sans"
+            font.weight: Font.SemiBold
+            font.letterSpacing: 0.5
+            anchors.top: parent.top
+            anchors.topMargin: 50
+            anchors.horizontalCenter: parent.horizontalCenter
+        }
+
+        ButtonNumber {
+            text: "Назад"
+            baseColorBack: "#edb1af"
+            pressedColorBack: "#F25E5E"
+            baseColorText: "#FFFFFF"
+            pressedColorText: "#FFFFFF"
+            width: 100
+            anchors.right: parent.right
+            anchors.rightMargin: 10
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 10
+            customAction: function() {
+                secretMenu.visible = false
+            }
+        }
+    }
+
+    function openSecretMenu() {
+        secretMenu.visible = true
+    }
 
     Rectangle {
         id: mainLabel
@@ -65,7 +129,11 @@ Window {
             activeFocusOnTab: false
             focus: false
             cursorVisible: false
-            onCursorPositionChanged: cursorPosition = text.length
+            onCursorPositionChanged: {
+                if (cursorPosition !== text.length) {
+                    cursorPosition = text.length
+                }
+            }
 
             width: 281
             height: 60
@@ -92,6 +160,14 @@ Window {
             color: "#FFFFFF"
             horizontalAlignment: Text.AlignRight
             verticalAlignment: Text.AlignVCenter
+
+            onTextChanged: {
+                if (window.waitingForCode && text === "123") {
+                    inputTimer.stop()
+                    window.waitingForCode = false
+                    openSecretMenu()
+                }
+            }
         }
     }
 
@@ -241,10 +317,12 @@ Window {
             }
         }
         ButtonSign {
+            id: equal
             text: "="
             iconSource: "rsc/icons/equal.svg"
+            color: tapArea.pressed ? pressedColorBack : baseColorBack
             customAction: function() {
-                if(!isResult) {
+                if(!isResult && !window.waitingForCode) {
                     window.isFloatNumber = false
                     window.isBracket = false
                     output.text += input.text;
@@ -252,6 +330,18 @@ Window {
                     let result = backend.calculate(fullExpression);
                     input.text = result;
                     isResult = true;
+                }
+            }
+            MouseArea {
+                id: tapArea
+                anchors.fill: parent
+                pressAndHoldInterval: 4000
+                onPressAndHold: {
+                    holdTimer.triggered()
+                }
+
+                onClicked: {
+                    equal.customAction()
                 }
             }
         }
