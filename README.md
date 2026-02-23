@@ -38,7 +38,7 @@
 
 ### Интрерфейс
 
-<img width="611" height="1280" alt="image" src="https://github.com/user-attachments/assets/6cb6a059-2d12-40b3-91d3-f28dc3a85241" />
+<img width="300" height="640" alt="image" src="https://github.com/user-attachments/assets/6cb6a059-2d12-40b3-91d3-f28dc3a85241" />
 
 ---
 
