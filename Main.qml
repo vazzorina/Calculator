@@ -7,6 +7,7 @@ Window {
     property bool isFloatNumber: false
     property bool isClosedBracket: false
     property bool isBracket: false
+    property bool isResult: false
 
     width: 360
     height: 640
@@ -111,16 +112,24 @@ Window {
             text: !window.isClosedBracket ? "(" : ")"
             iconSource: "rsc/icons/bkt.svg"
             customAction: function() {
-                if (output.text === "" && !window.isClosedBracket){
+                if(isResult) { //если был выведен результат, очищаем вывод выражения
+                    output.text = "";
+                    window.isResult = false;
+                }
+                if (output.text === ""){ //если output пустой, добавляем (
                     output.text = text
                     window.isClosedBracket = true
                 } else {
-                    if (window.isClosedBracket ) {
-                        output.text += input.text + text
-                        window.isBracket = true
+                    if (window.isClosedBracket ) { //если требуется ), добавляем вместе с числом в input
+                        if (input.text.startsWith("-")) {
+                            output.text += "(" + input.text + ")" + text
+                        } else {
+                            output.text += input.text + text
+                        }
+                        window.isBracket = true //обозначаем, что можем ввести только знак после )
                         window.isClosedBracket = false
                     } else {
-                        if (!window.isBracket) {
+                        if (!window.isBracket) { //исключаем вставку ( сразу после закрывающей )
                             output.text += text
                             window.isClosedBracket = true
                         }
@@ -131,6 +140,20 @@ Window {
         }
         ButtonSign {
             iconSource: "rsc/icons/plus_minus.svg"
+            customAction: function() {
+                if(isResult) {
+                    output.text = "";
+                    window.isResult = false;
+                }
+
+                if (input.text === "0") return;
+
+                if (input.text.startsWith("-")) {
+                    input.text = input.text.substring(1);
+                } else {
+                    input.text = "-" + input.text;
+                }
+            }
         }
         ButtonSign {
             text: "%"
@@ -198,6 +221,7 @@ Window {
                 output.text = ""
                 window.isFloatNumber = false
                 window.isClosedBracket = false
+                window.isResult = false
             }
         }
         ButtonNumber {
@@ -219,6 +243,17 @@ Window {
         ButtonSign {
             text: "="
             iconSource: "rsc/icons/equal.svg"
+            customAction: function() {
+                if(!isResult) {
+                    window.isFloatNumber = false
+                    window.isBracket = false
+                    output.text += input.text;
+                    let fullExpression = output.text;
+                    let result = backend.calculate(fullExpression);
+                    input.text = result;
+                    isResult = true;
+                }
+            }
         }
     }
 }

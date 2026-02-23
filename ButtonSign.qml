@@ -39,14 +39,22 @@ Rectangle {
     }
 
     onClicked: {
-        if (customAction !== null) {
+        if (customAction !== null) { //проверяем наличие переопределения
             customAction()
         } else {
-            if (!window.isBracket) {
+            if(isResult) { //если был выведен результат выражения
+                output.text = "";
+                window.isResult = false;
+            }
+            if (!window.isBracket) { //если не было )
                 if (output.text === "") {
                     output.text = input.text + text
                 } else {
-                    output.text += input.text + text
+                    if (input.text.startsWith("-")) {
+                        output.text += "(" + input.text + ")" + text
+                    } else {
+                        output.text += input.text + text
+                    }
                 }
             } else {
                 if (output.text !== "") {

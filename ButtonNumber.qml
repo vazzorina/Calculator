@@ -50,7 +50,7 @@ Rectangle {
         } else {
             if (input.text === "0") {
                 input.text = text
-            } else if (!window.isBracket){
+            } else if (!window.isBracket){ //если не было ), можем писать число
                 input.text += text
             }
         }

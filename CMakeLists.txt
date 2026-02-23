@@ -34,6 +34,9 @@ qt_add_qml_module(appCalculatorAndroid
         android/res/values/libs.xml
         android/res/xml/qtprovider_paths.xml
         android/res/values/styles.xml
+    SOURCES
+        backend.h
+        backend.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

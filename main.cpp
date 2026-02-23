@@ -1,5 +1,7 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QQmlContext>
+#include "backend.h"
 
 #ifdef Q_OS_ANDROID
 #include <QtCore/qnativeinterface.h>
@@ -27,7 +29,10 @@ int main(int argc, char *argv[])
     });
 #endif
 
+    backend backend;
+
     QQmlApplicationEngine engine;
+    engine.rootContext()->setContextProperty("backend", &backend);
     engine.loadFromModule("CalculatorAndroid", "Main");
 
 
