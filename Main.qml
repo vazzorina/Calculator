@@ -323,9 +323,19 @@ Window {
             color: tapArea.pressed ? pressedColorBack : baseColorBack
             customAction: function() {
                 if(!isResult && !window.waitingForCode) {
+                    if (!window.isBracket) { //если не было )
+                        if (output.text === "") {
+                            output.text = input.text
+                        } else {
+                            if (input.text.startsWith("-")) {
+                                output.text += "(" + input.text + ")"
+                            } else {
+                                output.text += input.text
+                            }
+                        }
+                    }
                     window.isFloatNumber = false
                     window.isBracket = false
-                    output.text += input.text;
                     let fullExpression = output.text;
                     let result = backend.calculate(fullExpression);
                     input.text = result;
