@@ -153,7 +153,17 @@ Window {
             rightPadding: 0
 
             text: "0"
-            font.pixelSize: 50
+            font.pixelSize: {
+                if (text.length <= 10) {
+                    return 50;
+                } else if (text.length <= 14) {
+                    return 35;
+                } else if (text.length <= 20) {
+                    return 24;
+                } else {
+                    return 19;
+                }
+            }
             font.family: "Open Sans"
             font.weight: Font.SemiBold
             font.letterSpacing: 0.5
