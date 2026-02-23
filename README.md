@@ -36,5 +36,11 @@
 
 ---
 
+### Интрерфейс
+
+<img width="611" height="1280" alt="image" src="https://github.com/user-attachments/assets/6cb6a059-2d12-40b3-91d3-f28dc3a85241" />
+
+---
+
 ## 📄 Лицензия
 Этот проект распространяется под лицензией MIT. Подробности в файле [LICENSE](LICENSE).
