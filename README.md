@@ -9,7 +9,7 @@
 ---
 
 ### 🛠 Стек технологий
-* Ot (QML, Qt Quick)
+* Qt (QML, Qt Quick)
 * C++
 * Android (NDK, arm64-v8a)
 * CMake
